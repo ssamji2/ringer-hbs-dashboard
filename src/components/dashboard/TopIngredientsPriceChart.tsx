@@ -104,7 +104,7 @@ export const TopIngredientsPriceChart = ({
   data: { name: string; currentPrice: number; channel: string; }[] 
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <Card className="p-6 bg-gradient-to-br from-violet-50 to-white">
         <h3 className="text-lg font-semibold mb-4">쿠팡 TOP 5 식자재 가격 동향</h3>
         <PriceChart data={data} channel="쿠팡" />
@@ -113,6 +113,11 @@ export const TopIngredientsPriceChart = ({
       <Card className="p-6 bg-gradient-to-br from-rose-50 to-white">
         <h3 className="text-lg font-semibold mb-4">마켓대리 TOP 5 식자재 가격 동향</h3>
         <PriceChart data={data} channel="마켓대리" />
+      </Card>
+
+      <Card className="p-6 bg-gradient-to-br from-blue-50 to-white">
+        <h3 className="text-lg font-semibold mb-4">쿠거 TOP 5 식자재 가격 동향</h3>
+        <PriceChart data={data} channel="쿠거" />
       </Card>
     </div>
   );
