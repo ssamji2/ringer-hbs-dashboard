@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/sidebar";
 import { 
   LayoutDashboard, 
-  Users,
-  Settings,
+  Store,
   FileText,
-  Calendar,
   BookOpen,
+  Settings,
   HelpCircle,
   Syringe,
-  User
+  User,
+  Building2
 } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
@@ -32,19 +32,19 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
       isActive: location.pathname === "/"
     },
     { 
-      icon: Users, 
-      label: "직원 관리", 
-      href: "/employees" 
+      icon: Building2, 
+      label: "매장 링거 솔루션", 
+      href: "/store-solution" 
     },
     { 
-      icon: Calendar, 
-      label: "일정 관리", 
-      href: "/schedule" 
+      icon: Store, 
+      label: "매장 리스트", 
+      href: "/store-list" 
     },
     { 
       icon: FileText, 
-      label: "문서 관리", 
-      href: "/documents" 
+      label: "실시간 영업현황", 
+      href: "/sales-status" 
     },
     { 
       icon: BookOpen, 
@@ -68,7 +68,7 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
       <div className="min-h-screen bg-secondary-light flex w-full">
         <Sidebar className="border-r border-gray-200 flex flex-col">
           <SidebarHeader className="p-4 flex items-center gap-2">
-            <Syringe className="w-6 h-6 text-primary" />
+            <Syringe className="w-6 h-6 text-primary animate-pulse" />
             <span className="font-semibold text-primary">링거v.0</span>
           </SidebarHeader>
           <SidebarContent>
@@ -79,10 +79,20 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
                     asChild
                     tooltip={item.label}
                     isActive={item.isActive}
+                    className="group transition-all duration-300 hover:bg-primary/10"
                   >
-                    <a href={item.href} className="flex items-center gap-2">
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.label}</span>
+                    <a 
+                      href={item.href} 
+                      className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300
+                        ${item.isActive ? 
+                          'bg-primary text-white shadow-lg scale-[0.98] font-medium' : 
+                          'text-gray-600 hover:text-primary'
+                        }`}
+                    >
+                      <item.icon className={`w-5 h-5 transition-transform duration-300 group-hover:scale-110
+                        ${item.isActive ? 'text-white' : 'text-gray-500 group-hover:text-primary'}`} 
+                      />
+                      <span className="text-sm">{item.label}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -90,10 +100,10 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
             </SidebarMenu>
           </SidebarContent>
           <div className="mt-auto p-4 border-t border-gray-200">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <User className="w-4 h-4" />
+            <div className="flex items-center gap-3 text-sm text-gray-600 hover:bg-gray-50 p-2 rounded-lg transition-all duration-300">
+              <User className="w-8 h-8 text-primary p-1.5 bg-primary/10 rounded-lg" />
               <div>
-                <p className="font-medium">국수나무 본사</p>
+                <p className="font-medium text-primary">국수나무 본사</p>
                 <p className="text-xs text-gray-500">관리자</p>
               </div>
             </div>
