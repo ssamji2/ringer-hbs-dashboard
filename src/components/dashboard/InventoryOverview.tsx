@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
-import { useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { TrendingDown, TrendingUp } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -7,11 +8,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { TopIngredientsPriceChart } from "./TopIngredientsPriceChart";
-import { InventoryTable } from "./InventoryTable";
-import { InventoryItem } from "@/types/inventory";
 
-const mockInventoryData: InventoryItem[] = [
+const mockInventoryData = [
   {
     id: 1,
     name: "닭고기 (한마리)",
@@ -23,7 +31,7 @@ const mockInventoryData: InventoryItem[] = [
     twoWeeksAgoPrice: 8400,
     monthAgoPrice: 8200,
     yearAgoPrice: 7800,
-    trend: "down" as const,
+    trend: "down",
     isLowestPrice: true,
   },
   {
@@ -509,15 +517,25 @@ export const InventoryOverview = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const filteredData = mockInventoryData.filter(item => 
-    selectedCategory === "전체" || item.category === selectedCategory
-  );
+  const filteredData = selectedCategory === "전체" 
+    ? mockInventoryData 
+    : mockInventoryData.filter(item => item.category === selectedCategory);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+
+  // Get top 5 ingredients by price for each channel separately
+  const topIngredientsByChannel = mockInventoryData
+    .sort((a, b) => b.currentPrice - a.currentPrice);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="space-y-6">
-      <TopIngredientsPriceChart data={mockInventoryData} />
+      <TopIngredientsPriceChart data={topIngredientsByChannel} />
       
       <Card className="p-6">
         <div className="flex justify-between items-center mb-6">
@@ -535,13 +553,75 @@ export const InventoryOverview = () => {
             </SelectContent>
           </Select>
         </div>
-        
-        <InventoryTable 
-          data={filteredData}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>품목</TableHead>
+                <TableHead>채널</TableHead>
+                <TableHead>현재가격</TableHead>
+                <TableHead>어제가격</TableHead>
+                <TableHead>7일전</TableHead>
+                <TableHead>2주전</TableHead>
+                <TableHead>한달전</TableHead>
+                <TableHead>1년전</TableHead>
+                <TableHead>추세</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {paginatedData.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell>{item.channel}</TableCell>
+                  <TableCell className={item.isLowestPrice ? "text-success-dark font-bold" : ""}>
+                    ₩{item.currentPrice.toLocaleString()}
+                  </TableCell>
+                  <TableCell>₩{item.yesterdayPrice.toLocaleString()}</TableCell>
+                  <TableCell>₩{item.weekAgoPrice.toLocaleString()}</TableCell>
+                  <TableCell>₩{item.twoWeeksAgoPrice.toLocaleString()}</TableCell>
+                  <TableCell>₩{item.monthAgoPrice.toLocaleString()}</TableCell>
+                  <TableCell>₩{item.yearAgoPrice.toLocaleString()}</TableCell>
+                  <TableCell>
+                    {item.trend === "up" ? (
+                      <TrendingUp className="text-warning-dark w-5 h-5" />
+                    ) : (
+                      <TrendingDown className="text-success-dark w-5 h-5" />
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="mt-4">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    onClick={() => handlePageChange(page)}
+                    isActive={currentPage === page}
+                    className="cursor-pointer"
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       </Card>
     </div>
   );
