@@ -7,16 +7,26 @@ type PriceData = {
   [key: string]: string | number;
 };
 
-const CHART_COLORS = [
-  "#8B5CF6",
-  "#EC4899",
-  "#10B981",
-  "#F59E0B",
-  "#6366F1",
-];
+const CHART_COLORS = {
+  쿠팡: {
+    gradient: ["#0EA5E9", "#8B5CF6"],
+    background: "from-blue-50 to-violet-50",
+    stroke: "#8B5CF6"
+  },
+  마켓대리: {
+    gradient: ["#F97316", "#D946EF"],
+    background: "from-orange-50 to-pink-50",
+    stroke: "#D946EF"
+  },
+  쿠거: {
+    gradient: ["#10B981", "#6366F1"],
+    background: "from-emerald-50 to-indigo-50",
+    stroke: "#6366F1"
+  }
+};
 
 const generateRandomPriceChange = (basePrice: number) => {
-  const changePercent = (Math.random() - 0.5) * 0.02; // -1% to +1% change
+  const changePercent = (Math.random() - 0.5) * 0.02;
   return Math.round(basePrice * (1 + changePercent));
 };
 
@@ -28,10 +38,11 @@ const PriceChart = ({
   channel: string;
 }) => {
   const [priceHistory, setPriceHistory] = useState<PriceData[]>([]);
-  const channelData = data.filter(item => item.channel === channel).slice(0, 5);
+  const channelData = data.filter(item => item.channel === channel)
+    .sort((a, b) => b.currentPrice - a.currentPrice)
+    .slice(0, 5);
 
   useEffect(() => {
-    // Initialize with current prices
     const initialData: PriceData = {
       time: new Date().toLocaleTimeString(),
     };
@@ -40,7 +51,6 @@ const PriceChart = ({
     });
     setPriceHistory([initialData]);
 
-    // Update prices every 3 seconds
     const interval = setInterval(() => {
       setPriceHistory((prev) => {
         const newData: PriceData = {
@@ -50,27 +60,40 @@ const PriceChart = ({
           const lastPrice = prev[prev.length - 1][ingredient.name] as number;
           newData[ingredient.name] = generateRandomPriceChange(lastPrice);
         });
-        return [...prev.slice(-10), newData]; // Keep last 10 data points
+        return [...prev.slice(-10), newData];
       });
     }, 3000);
 
     return () => clearInterval(interval);
   }, [data, channel]);
 
+  const colors = CHART_COLORS[channel as keyof typeof CHART_COLORS];
+
   return (
     <div className="h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={priceHistory}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+          <defs>
+            <linearGradient id={`gradient-${channel}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={colors.gradient[0]} stopOpacity={0.2}/>
+              <stop offset="95%" stopColor={colors.gradient[1]} stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" opacity={0.4} />
           <XAxis 
             dataKey="time" 
             stroke="#6B7280"
             tick={{ fontSize: 12 }}
+            tickLine={false}
+            axisLine={{ stroke: '#E5E7EB' }}
           />
           <YAxis
             stroke="#6B7280"
             tickFormatter={(value) => `₩${value.toLocaleString()}`}
             domain={['auto', 'auto']}
+            tickLine={false}
+            axisLine={{ stroke: '#E5E7EB' }}
+            tick={{ fontSize: 12 }}
           />
           <Tooltip
             formatter={(value: number) => [`₩${value.toLocaleString()}`, "가격"]}
@@ -78,18 +101,28 @@ const PriceChart = ({
               backgroundColor: 'rgba(255, 255, 255, 0.95)',
               borderRadius: '8px',
               border: '1px solid #E5E7EB',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
             }}
+            labelStyle={{ color: '#6B7280' }}
           />
-          <Legend />
+          <Legend 
+            verticalAlign="top" 
+            height={36}
+            iconType="circle"
+            formatter={(value) => <span className="text-sm text-gray-600">{value}</span>}
+          />
           {channelData.map((ingredient, index) => (
             <Line
               key={ingredient.name}
               type="monotone"
               dataKey={ingredient.name}
-              stroke={CHART_COLORS[index]}
+              stroke={colors.stroke}
               strokeWidth={2}
-              dot={false}
+              dot={{ fill: colors.gradient[0], strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 6, fill: colors.gradient[0] }}
               name={ingredient.name}
+              strokeOpacity={(5 - index) / 5}
+              fill={`url(#gradient-${channel})`}
             />
           ))}
         </LineChart>
@@ -105,18 +138,18 @@ export const TopIngredientsPriceChart = ({
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <Card className="p-6 bg-gradient-to-br from-violet-50 to-white">
-        <h3 className="text-lg font-semibold mb-4">쿠팡 TOP 5 식자재 가격 동향</h3>
+      <Card className={`p-6 bg-gradient-to-br ${CHART_COLORS.쿠팡.background} shadow-sm hover:shadow-md transition-shadow duration-200`}>
+        <h3 className="text-lg font-semibold mb-4 text-gray-800">쿠팡 TOP 5 식자재 가격 동향</h3>
         <PriceChart data={data} channel="쿠팡" />
       </Card>
       
-      <Card className="p-6 bg-gradient-to-br from-rose-50 to-white">
-        <h3 className="text-lg font-semibold mb-4">마켓대리 TOP 5 식자재 가격 동향</h3>
+      <Card className={`p-6 bg-gradient-to-br ${CHART_COLORS.마켓대리.background} shadow-sm hover:shadow-md transition-shadow duration-200`}>
+        <h3 className="text-lg font-semibold mb-4 text-gray-800">마켓대리 TOP 5 식자재 가격 동향</h3>
         <PriceChart data={data} channel="마켓대리" />
       </Card>
 
-      <Card className="p-6 bg-gradient-to-br from-blue-50 to-white">
-        <h3 className="text-lg font-semibold mb-4">쿠거 TOP 5 식자재 가격 동향</h3>
+      <Card className={`p-6 bg-gradient-to-br ${CHART_COLORS.쿠거.background} shadow-sm hover:shadow-md transition-shadow duration-200`}>
+        <h3 className="text-lg font-semibold mb-4 text-gray-800">쿠거 TOP 5 식자재 가격 동향</h3>
         <PriceChart data={data} channel="쿠거" />
       </Card>
     </div>
