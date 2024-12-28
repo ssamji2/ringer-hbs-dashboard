@@ -14,6 +14,7 @@ import {
   Bar
 } from "recharts";
 import { StoreReviewTable } from "./StoreReviewTable";
+import { MenuReviewTable } from "./MenuReviewTable"; // Importing MenuReviewTable
 import { brands } from "@/data/reviewData";
 
 const getFilteredData = (data: any[], brand: string) => {
@@ -230,9 +231,7 @@ export const ReviewOverview = () => {
         </TabsContent>
 
         <TabsContent value="byMenu" className="mt-6">
-          <div className="flex justify-center items-center h-64">
-            <p className="text-gray-500">메뉴별 리뷰 데이터 준비 중</p>
-          </div>
+          <MenuReviewTable /> {/* Using MenuReviewTable */}
         </TabsContent>
       </Tabs>
     </div>
