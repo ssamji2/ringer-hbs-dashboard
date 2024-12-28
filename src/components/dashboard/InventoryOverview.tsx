@@ -17,14 +17,14 @@ import {
 } from "@/components/ui/pagination";
 import { TopIngredientsPriceChart } from "./TopIngredientsPriceChart";
 import { InventoryTable } from "./InventoryTable";
-import { type InventoryItem } from "@/types/inventory";
+import { type InventoryItem, type Channel } from "@/types/inventory";
 
-const mockInventoryData = [
+const mockInventoryData: InventoryItem[] = [
   {
     id: 1,
     name: "닭고기 (한마리)",
     category: "축산물",
-    channel: "쿠팡",
+    channel: "쿠팡" as Channel,
     currentPrice: 8500,
     yesterdayPrice: 8700,
     weekAgoPrice: 8300,
@@ -510,7 +510,7 @@ const mockInventoryData = [
     trend: "down",
     isLowestPrice: false,
   }
-];
+] as const;
 
 export const InventoryOverview = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("전체");
