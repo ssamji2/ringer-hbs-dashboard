@@ -2,6 +2,7 @@ export type Review = {
   id: string;
   brand: string;
   store: string;
+  menu?: string;  // 메뉴 필드 추가
   date: string;
   rating: number;
   review: string;
@@ -9,11 +10,13 @@ export type Review = {
   channel: "N플레이스" | "배민" | "쿠팡이츠";
 };
 
+// 긍정 리뷰 데이터
 export const positiveReviews: Review[] = [
   {
     id: "1",
     brand: "국수나무",
     store: "강남점",
+    menu: "해물국수",
     date: "2024-02-15",
     rating: 5,
     review: "면이 쫄깃하고 국물이 진해요. 직원분들도 친절하셔서 좋았습니다!",
@@ -112,11 +115,13 @@ export const positiveReviews: Review[] = [
   }
 ];
 
+// 부정 리뷰 데이터
 export const negativeReviews: Review[] = [
   {
     id: "1",
     brand: "국수나무",
     store: "강남점",
+    menu: "얼큰국수",
     date: "2024-02-15",
     rating: 2,
     review: "오늘은 면이 너무 퍼졌어요. 기다리는 시간도 길었습니다.",
