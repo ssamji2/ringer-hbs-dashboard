@@ -16,8 +16,11 @@ export const storeReviews = [
   { brand: "화평동왕냉면", store: "화평동왕냉면 잠실점", avgRating: 4.7, reviewCount: 156, positiveRate: "93%", negativeRate: "7%" },
 ];
 
-export const brands = ["국수나무", "도쿄스테이크", "화평동왕냉면"];
+export const brands = ["전체", "국수나무", "도쿄스테이크", "화평동왕냉면"];
 
 export const getStoresByBrand = (brand: string) => {
+  if (brand === "전체") {
+    return storeReviews;
+  }
   return storeReviews.filter(review => review.brand === brand);
 };

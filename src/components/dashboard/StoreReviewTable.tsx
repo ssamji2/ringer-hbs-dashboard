@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { storeReviews, brands, getStoresByBrand } from "@/data/reviewData";
 
 export const StoreReviewTable = () => {
-  const [selectedBrand, setSelectedBrand] = useState(brands[0]);
+  const [selectedBrand, setSelectedBrand] = useState("전체");
   const filteredStores = getStoresByBrand(selectedBrand);
 
   return (
