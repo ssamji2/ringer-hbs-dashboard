@@ -20,6 +20,10 @@ export const InventoryTable = ({ data }: InventoryTableProps) => {
     return acc;
   }, {} as Record<string, { name: string; category: string; channels: Record<string, InventoryItem> }>);
 
+  const formatPrice = (price?: number) => {
+    return price ? price.toLocaleString() + '원' : '-';
+  };
+
   return (
     <Table>
       <TableHeader>
@@ -28,7 +32,7 @@ export const InventoryTable = ({ data }: InventoryTableProps) => {
           <TableHead>쿠팡</TableHead>
           <TableHead>마켓대리</TableHead>
           <TableHead>쿠거</TableHead>
-          <TableHead>현재가격</TableHead>
+          <TableHead>최저가격</TableHead>
           <TableHead>어제가격</TableHead>
           <TableHead>7일전</TableHead>
           <TableHead>2주전</TableHead>
@@ -38,51 +42,67 @@ export const InventoryTable = ({ data }: InventoryTableProps) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Object.values(groupedItems).map((group) => (
-          <TableRow key={group.name}>
-            <TableCell className="font-medium">{group.name}</TableCell>
-            <TableCell>{group.channels["쿠팡"]?.currentPrice.toLocaleString()}</TableCell>
-            <TableCell>{group.channels["마켓대리"]?.currentPrice.toLocaleString()}</TableCell>
-            <TableCell>{group.channels["쿠거"]?.currentPrice.toLocaleString()}</TableCell>
-            <TableCell>
-              {Math.min(
-                ...Object.values(group.channels).map(item => item.currentPrice)
-              ).toLocaleString()}
-            </TableCell>
-            <TableCell>
-              {Math.min(
-                ...Object.values(group.channels).map(item => item.yesterdayPrice)
-              ).toLocaleString()}
-            </TableCell>
-            <TableCell>
-              {Math.min(
-                ...Object.values(group.channels).map(item => item.weekAgoPrice)
-              ).toLocaleString()}
-            </TableCell>
-            <TableCell>
-              {Math.min(
-                ...Object.values(group.channels).map(item => item.twoWeeksAgoPrice)
-              ).toLocaleString()}
-            </TableCell>
-            <TableCell>
-              {Math.min(
-                ...Object.values(group.channels).map(item => item.monthAgoPrice)
-              ).toLocaleString()}
-            </TableCell>
-            <TableCell>
-              {Math.min(
-                ...Object.values(group.channels).map(item => item.yearAgoPrice)
-              ).toLocaleString()}
-            </TableCell>
-            <TableCell>
-              {Object.values(group.channels).some(item => item.trend === "up") ? (
-                <TrendingUp className="text-warning-dark w-5 h-5" />
-              ) : (
-                <TrendingDown className="text-success-dark w-5 h-5" />
-              )}
-            </TableCell>
-          </TableRow>
-        ))}
+        {Object.values(groupedItems).map((group) => {
+          const lowestCurrentPrice = Math.min(
+            ...Object.values(group.channels)
+              .map(item => item.currentPrice)
+              .filter(price => price !== undefined)
+          );
+          
+          const lowestYesterdayPrice = Math.min(
+            ...Object.values(group.channels)
+              .map(item => item.yesterdayPrice)
+              .filter(price => price !== undefined)
+          );
+          
+          const lowestWeekAgoPrice = Math.min(
+            ...Object.values(group.channels)
+              .map(item => item.weekAgoPrice)
+              .filter(price => price !== undefined)
+          );
+          
+          const lowestTwoWeeksAgoPrice = Math.min(
+            ...Object.values(group.channels)
+              .map(item => item.twoWeeksAgoPrice)
+              .filter(price => price !== undefined)
+          );
+          
+          const lowestMonthAgoPrice = Math.min(
+            ...Object.values(group.channels)
+              .map(item => item.monthAgoPrice)
+              .filter(price => price !== undefined)
+          );
+          
+          const lowestYearAgoPrice = Math.min(
+            ...Object.values(group.channels)
+              .map(item => item.yearAgoPrice)
+              .filter(price => price !== undefined)
+          );
+
+          const trend = Object.values(group.channels).some(item => item.trend === "up") ? "up" : "down";
+
+          return (
+            <TableRow key={group.name}>
+              <TableCell className="font-medium">{group.name}</TableCell>
+              <TableCell>{formatPrice(group.channels["쿠팡"]?.currentPrice)}</TableCell>
+              <TableCell>{formatPrice(group.channels["마켓대리"]?.currentPrice)}</TableCell>
+              <TableCell>{formatPrice(group.channels["쿠거"]?.currentPrice)}</TableCell>
+              <TableCell>{formatPrice(lowestCurrentPrice)}</TableCell>
+              <TableCell>{formatPrice(lowestYesterdayPrice)}</TableCell>
+              <TableCell>{formatPrice(lowestWeekAgoPrice)}</TableCell>
+              <TableCell>{formatPrice(lowestTwoWeeksAgoPrice)}</TableCell>
+              <TableCell>{formatPrice(lowestMonthAgoPrice)}</TableCell>
+              <TableCell>{formatPrice(lowestYearAgoPrice)}</TableCell>
+              <TableCell>
+                {trend === "up" ? (
+                  <TrendingUp className="text-warning-dark w-5 h-5" />
+                ) : (
+                  <TrendingDown className="text-success-dark w-5 h-5" />
+                )}
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );
