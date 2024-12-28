@@ -144,48 +144,55 @@ const formatCurrency = (value: number) => `₩${value.toLocaleString()}`;
 
 export const SalesTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 3; // 실제 데이터에 따라 조정
+  const totalPages = 3;
 
   return (
     <Card className="p-6 bg-gradient-to-br from-blue-50 to-white">
-      <h3 className="text-lg font-semibold mb-4">매출 상세 내역</h3>
-      <div className="overflow-x-auto">
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">매출 상세 내역</h3>
+      <div className="overflow-x-auto rounded-lg border border-gray-100 shadow-sm">
         <Table>
           <TableHeader>
-            <TableRow className="bg-muted/50">
-              <TableHead>매장명</TableHead>
-              <TableHead className="text-right">매출</TableHead>
-              <TableHead className="text-right">배달매출</TableHead>
-              <TableHead className="text-right">오프라인매출</TableHead>
-              <TableHead className="text-right">기타매출</TableHead>
-              <TableHead className="text-right">일평균매출</TableHead>
-              <TableHead>주문발생일</TableHead>
-              <TableHead className="text-right">주문활성율(%)</TableHead>
-              <TableHead className="text-right">주문수</TableHead>
+            <TableRow className="bg-gradient-to-r from-gray-50 to-gray-100">
+              <TableHead className="font-semibold text-gray-700">매장명</TableHead>
+              <TableHead className="text-right font-semibold text-gray-700">매출</TableHead>
+              <TableHead className="text-right font-semibold text-gray-700">배달매출</TableHead>
+              <TableHead className="text-right font-semibold text-gray-700">오프라인매출</TableHead>
+              <TableHead className="text-right font-semibold text-gray-700">기타매출</TableHead>
+              <TableHead className="text-right font-semibold text-gray-700">일평균매출</TableHead>
+              <TableHead className="font-semibold text-gray-700">주문발생일</TableHead>
+              <TableHead className="text-right font-semibold text-gray-700">주문활성율(%)</TableHead>
+              <TableHead className="text-right font-semibold text-gray-700">주문수</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {salesData.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell className="font-medium">{row.storeName}</TableCell>
-                <TableCell className="text-right">{formatCurrency(row.totalSales)}</TableCell>
-                <TableCell className="text-right">{formatCurrency(row.deliverySales)}</TableCell>
-                <TableCell className="text-right">{formatCurrency(row.offlineSales)}</TableCell>
-                <TableCell className="text-right">{formatCurrency(row.otherSales)}</TableCell>
-                <TableCell className="text-right">{formatCurrency(row.dailyAverage)}</TableCell>
-                <TableCell>{row.orderDate}</TableCell>
-                <TableCell className="text-right">{row.orderRate}%</TableCell>
-                <TableCell className="text-right">{row.orderCount}</TableCell>
+              <TableRow 
+                key={row.id}
+                className="hover:bg-gray-50 transition-colors"
+              >
+                <TableCell className="font-medium text-gray-900">{row.storeName}</TableCell>
+                <TableCell className="text-right font-medium text-gray-900">{formatCurrency(row.totalSales)}</TableCell>
+                <TableCell className="text-right text-gray-600">{formatCurrency(row.deliverySales)}</TableCell>
+                <TableCell className="text-right text-gray-600">{formatCurrency(row.offlineSales)}</TableCell>
+                <TableCell className="text-right text-gray-600">{formatCurrency(row.otherSales)}</TableCell>
+                <TableCell className="text-right text-gray-600">{formatCurrency(row.dailyAverage)}</TableCell>
+                <TableCell className="text-gray-600">{row.orderDate}</TableCell>
+                <TableCell className="text-right text-gray-600">{row.orderRate}%</TableCell>
+                <TableCell className="text-right text-gray-600">{row.orderCount}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
-      <div className="mt-4">
+      <div className="mt-4 flex justify-center">
         <Pagination>
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious href="#" />
+              <PaginationPrevious 
+                href="#" 
+                className="hover:bg-gray-100"
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+              />
             </PaginationItem>
             {[...Array(totalPages)].map((_, i) => (
               <PaginationItem key={i + 1}>
@@ -193,13 +200,18 @@ export const SalesTable = () => {
                   href="#"
                   isActive={currentPage === i + 1}
                   onClick={() => setCurrentPage(i + 1)}
+                  className={currentPage === i + 1 ? 'bg-primary text-white' : 'hover:bg-gray-100'}
                 >
                   {i + 1}
                 </PaginationLink>
               </PaginationItem>
             ))}
             <PaginationItem>
-              <PaginationNext href="#" />
+              <PaginationNext 
+                href="#" 
+                className="hover:bg-gray-100"
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+              />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
