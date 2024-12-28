@@ -70,11 +70,11 @@ const PriceChart = ({
   const colors = CHART_COLORS[channel as keyof typeof CHART_COLORS];
 
   return (
-    <div className="h-[400px]">
+    <div className="h-[450px]">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart 
           data={priceHistory}
-          margin={{ top: 40, right: 30, left: 20, bottom: 20 }}  // Adjusted margins for better spacing
+          margin={{ top: 60, right: 30, left: 20, bottom: 20 }}
         >
           <defs>
             <linearGradient id={`gradient-${channel}`} x1="0" y1="0" x2="0" y2="1">
@@ -110,16 +110,16 @@ const PriceChart = ({
           />
           <Legend 
             verticalAlign="top"
-            align="left"
             height={36}
-            iconType="circle"
+            align="left"
             wrapperStyle={{
-              paddingTop: '10px',
-              paddingBottom: '30px',
+              top: 0,
+              left: 0,
+              marginBottom: '50px',
               fontSize: '12px',
             }}
             formatter={(value) => (
-              <span className="text-sm text-gray-600 truncate max-w-[150px] inline-block">
+              <span className="text-sm text-gray-600 truncate max-w-[120px] inline-block">
                 {value}
               </span>
             )}
