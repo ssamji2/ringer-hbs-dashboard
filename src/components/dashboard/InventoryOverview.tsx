@@ -17,6 +17,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { TopIngredientsPriceChart } from "./TopIngredientsPriceChart";
 
 const mockInventoryData = [
   {
@@ -454,12 +455,19 @@ export const InventoryOverview = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
 
+  // Get top 5 ingredients by price for each channel
+  const topIngredientsByChannel = mockInventoryData
+    .sort((a, b) => b.currentPrice - a.currentPrice)
+    .slice(0, 5);
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
   return (
     <div className="space-y-6">
+      <TopIngredientsPriceChart data={topIngredientsByChannel} />
+      
       <Card className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-lg font-semibold">식자재 가격 현황</h3>
