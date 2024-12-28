@@ -70,76 +70,82 @@ const PriceChart = ({
   const colors = CHART_COLORS[channel as keyof typeof CHART_COLORS];
 
   return (
-    <div className="h-[450px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart 
-          data={priceHistory}
-          margin={{ top: 60, right: 30, left: 20, bottom: 20 }}
-        >
-          <defs>
-            <linearGradient id={`gradient-${channel}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={colors.gradient[0]} stopOpacity={0.2}/>
-              <stop offset="95%" stopColor={colors.gradient[1]} stopOpacity={0}/>
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" opacity={0.4} />
-          <XAxis 
-            dataKey="time" 
-            stroke="#6B7280"
-            tick={{ fontSize: 12 }}
-            tickLine={false}
-            axisLine={{ stroke: '#E5E7EB' }}
-          />
-          <YAxis
-            stroke="#6B7280"
-            tickFormatter={(value) => `₩${value.toLocaleString()}`}
-            domain={['auto', 'auto']}
-            tickLine={false}
-            axisLine={{ stroke: '#E5E7EB' }}
-            tick={{ fontSize: 12 }}
-          />
-          <Tooltip
-            formatter={(value: number) => [`₩${value.toLocaleString()}`, "가격"]}
-            contentStyle={{
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              borderRadius: '8px',
-              border: '1px solid #E5E7EB',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-            }}
-            labelStyle={{ color: '#6B7280' }}
-          />
-          <Legend 
-            verticalAlign="top"
-            height={36}
-            align="left"
-            wrapperStyle={{
-              top: 0,
-              left: 0,
-              marginBottom: '50px',
-              fontSize: '12px',
-            }}
-            formatter={(value) => (
-              <span className="text-sm text-gray-600 truncate max-w-[120px] inline-block">
-                {value}
-              </span>
-            )}
-          />
-          {channelData.map((ingredient, index) => (
-            <Line
-              key={ingredient.name}
-              type="monotone"
-              dataKey={ingredient.name}
-              stroke={colors.stroke}
-              strokeWidth={2}
-              dot={{ fill: colors.gradient[0], strokeWidth: 2, r: 4 }}
-              activeDot={{ r: 6, fill: colors.gradient[0] }}
-              name={ingredient.name}
-              strokeOpacity={(5 - index) / 5}
-              fill={`url(#gradient-${channel})`}
+    <div className="space-y-4">
+      <div className="h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart 
+            data={priceHistory}
+            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+          >
+            <defs>
+              <linearGradient id={`gradient-${channel}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={colors.gradient[0]} stopOpacity={0.2}/>
+                <stop offset="95%" stopColor={colors.gradient[1]} stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" opacity={0.4} />
+            <XAxis 
+              dataKey="time" 
+              stroke="#6B7280"
+              tick={{ fontSize: 12 }}
+              tickLine={false}
+              axisLine={{ stroke: '#E5E7EB' }}
             />
-          ))}
-        </LineChart>
-      </ResponsiveContainer>
+            <YAxis
+              stroke="#6B7280"
+              tickFormatter={(value) => `₩${value.toLocaleString()}`}
+              domain={['auto', 'auto']}
+              tickLine={false}
+              axisLine={{ stroke: '#E5E7EB' }}
+              tick={{ fontSize: 12 }}
+            />
+            <Tooltip
+              formatter={(value: number) => [`₩${value.toLocaleString()}`, "가격"]}
+              contentStyle={{
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: '8px',
+                border: '1px solid #E5E7EB',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+              }}
+              labelStyle={{ color: '#6B7280' }}
+            />
+            {channelData.map((ingredient, index) => (
+              <Line
+                key={ingredient.name}
+                type="monotone"
+                dataKey={ingredient.name}
+                stroke={colors.stroke}
+                strokeWidth={2}
+                dot={{ fill: colors.gradient[0], strokeWidth: 2, r: 4 }}
+                activeDot={{ r: 6, fill: colors.gradient[0] }}
+                name={ingredient.name}
+                strokeOpacity={(5 - index) / 5}
+                fill={`url(#gradient-${channel})`}
+              />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      
+      <div className="flex flex-wrap gap-4 justify-center items-center px-4">
+        {channelData.map((ingredient, index) => (
+          <div 
+            key={ingredient.name}
+            className="flex items-center gap-2"
+          >
+            <div 
+              className="w-3 h-3 rounded-full"
+              style={{ 
+                backgroundColor: colors.stroke,
+                opacity: (5 - index) / 5
+              }}
+            />
+            <span className="text-sm text-gray-600">
+              {ingredient.name}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
