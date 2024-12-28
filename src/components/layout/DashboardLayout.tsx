@@ -10,9 +10,6 @@ import {
 } from "@/components/ui/sidebar";
 import { 
   LayoutDashboard, 
-  LineChart, 
-  MessageSquare, 
-  Package,
   Users,
   Settings,
   FileText,
@@ -33,21 +30,6 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
       label: "대시보드", 
       href: "/",
       isActive: location.pathname === "/"
-    },
-    { 
-      icon: LineChart, 
-      label: "통합 매출 조회", 
-      href: "/sales" 
-    },
-    { 
-      icon: MessageSquare, 
-      label: "리뷰 통합 조회", 
-      href: "/reviews" 
-    },
-    { 
-      icon: Package, 
-      label: "식자재 현황", 
-      href: "/inventory" 
     },
     { 
       icon: Users, 
