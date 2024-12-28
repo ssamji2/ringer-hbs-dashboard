@@ -23,11 +23,22 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['@radix-ui/react-tooltip', '@radix-ui/react-toast'],
+          'ui-vendor': ['@radix-ui/react-tooltip', '@radix-ui/react-toast', '@radix-ui/react-tabs', '@radix-ui/react-select'],
           'chart-vendor': ['recharts'],
+          'form-vendor': ['react-hook-form', '@hookform/resolvers'],
+          'query-vendor': ['@tanstack/react-query'],
+          'utils-vendor': ['date-fns', 'clsx', 'tailwind-merge'],
         }
       }
     },
     chunkSizeWarningLimit: 1000,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    },
+    reportCompressedSize: false
   }
 }));
