@@ -28,6 +28,7 @@ export const ReviewList = ({ reviews, title }: ReviewListProps) => {
             <TableRow>
               <TableHead>브랜드명</TableHead>
               <TableHead>매장명</TableHead>
+              <TableHead>채널</TableHead>
               <TableHead>일자</TableHead>
               <TableHead>평점</TableHead>
               <TableHead className="w-1/3">고객 리뷰</TableHead>
@@ -39,6 +40,7 @@ export const ReviewList = ({ reviews, title }: ReviewListProps) => {
               <TableRow key={review.id}>
                 <TableCell>{review.brand}</TableCell>
                 <TableCell>{review.store}</TableCell>
+                <TableCell>{review.channel}</TableCell>
                 <TableCell>{review.date}</TableCell>
                 <TableCell>{review.rating}</TableCell>
                 <TableCell>{review.review}</TableCell>
