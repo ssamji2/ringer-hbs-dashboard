@@ -1,11 +1,20 @@
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { TrendingDown, TrendingUp } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
 
 const mockInventoryData = [
   {
     id: 1,
     name: "닭고기 (한마리)",
+    category: "축산물",
     channel: "쿠팡",
     currentPrice: 8500,
     yesterdayPrice: 8700,
@@ -19,6 +28,7 @@ const mockInventoryData = [
   {
     id: 2,
     name: "돼지고기 (삼겹살 1kg)",
+    category: "축산물",
     channel: "마켓대리",
     currentPrice: 15000,
     yesterdayPrice: 14800,
@@ -33,10 +43,30 @@ const mockInventoryData = [
 ];
 
 export const InventoryOverview = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string>("전체");
+
+  const filteredData = selectedCategory === "전체" 
+    ? mockInventoryData 
+    : mockInventoryData.filter(item => item.category === selectedCategory);
+
   return (
     <div className="space-y-6">
       <Card className="p-6">
-        <h3 className="text-lg font-semibold mb-4">식자재 가격 현황</h3>
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-lg font-semibold">식자재 가격 현황</h3>
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="카테고리 선택" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="전체">전체</SelectItem>
+              <SelectItem value="축산물">축산물</SelectItem>
+              <SelectItem value="수산물">수산물</SelectItem>
+              <SelectItem value="채소/과일">채소/과일</SelectItem>
+              <SelectItem value="가공">가공</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -53,7 +83,7 @@ export const InventoryOverview = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockInventoryData.map((item) => (
+              {filteredData.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell>{item.channel}</TableCell>
