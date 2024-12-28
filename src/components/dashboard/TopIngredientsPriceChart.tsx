@@ -114,7 +114,7 @@ const PriceChart = ({
               labelStyle={{ color: '#6B7280' }}
             />
             {channelData.map((ingredient) => {
-              const color = INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS];
+              const color = INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS] || '#374151';
               return (
                 <Line
                   key={ingredient.name}
@@ -141,7 +141,7 @@ const PriceChart = ({
       
       <div className="flex flex-wrap gap-4 justify-center items-center px-4 mt-4">
         {channelData.map((ingredient) => {
-          const color = INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS];
+          const color = INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS] || '#374151';
           return (
             <div 
               key={ingredient.name}
