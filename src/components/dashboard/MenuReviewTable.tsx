@@ -1,10 +1,35 @@
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card } from "@/components/ui/card";
 import { menuCategories, menuReviews, getMenusByCategory } from "@/data/menuReviewData";
+import { ReviewList } from "./ReviewList";
+import { positiveReviews, negativeReviews } from "@/data/reviewListData";
 
 export const MenuReviewTable = () => {
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const filteredMenus = getMenusByCategory(selectedCategory);
+
+  // 메뉴 카테고리에 따른 리뷰 필터링
+  const getReviewsByCategory = (reviews: typeof positiveReviews) => {
+    if (selectedCategory === "전체") return reviews;
+    
+    // 메뉴 카테고리에 해당하는 브랜드들 찾기
+    const brandsInCategory = new Set(
+      menuReviews
+        .filter(menu => menu.category === selectedCategory)
+        .map(menu => {
+          if (menu.category === "국수류") return "국수나무";
+          if (menu.category === "스테이크류") return "도쿄스테이크";
+          if (menu.category === "냉면류") return "화평동왕냉면";
+          return "";
+        })
+    );
+
+    return reviews.filter(review => brandsInCategory.has(review.brand));
+  };
+
+  const filteredPositiveReviews = getReviewsByCategory(positiveReviews);
+  const filteredNegativeReviews = getReviewsByCategory(negativeReviews);
 
   return (
     <div className="space-y-6">
@@ -49,6 +74,15 @@ export const MenuReviewTable = () => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="space-y-6">
+        <Card className="p-6">
+          <ReviewList reviews={filteredPositiveReviews} title="최근 30일간의 긍정 리뷰 리스트" />
+        </Card>
+        <Card className="p-6">
+          <ReviewList reviews={filteredNegativeReviews} title="최근 30일간의 부정 리뷰 리스트" />
+        </Card>
       </div>
     </div>
   );

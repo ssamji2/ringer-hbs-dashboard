@@ -1,10 +1,21 @@
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card } from "@/components/ui/card";
 import { storeReviews, brands, getStoresByBrand } from "@/data/reviewData";
+import { ReviewList } from "./ReviewList";
+import { positiveReviews, negativeReviews } from "@/data/reviewListData";
 
 export const StoreReviewTable = () => {
   const [selectedBrand, setSelectedBrand] = useState("전체");
   const filteredStores = getStoresByBrand(selectedBrand);
+
+  const filteredPositiveReviews = selectedBrand === "전체" 
+    ? positiveReviews 
+    : positiveReviews.filter(review => review.brand === selectedBrand);
+
+  const filteredNegativeReviews = selectedBrand === "전체"
+    ? negativeReviews
+    : negativeReviews.filter(review => review.brand === selectedBrand);
 
   return (
     <div className="space-y-6">
@@ -49,6 +60,15 @@ export const StoreReviewTable = () => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="space-y-6">
+        <Card className="p-6">
+          <ReviewList reviews={filteredPositiveReviews} title="최근 30일간의 긍정 리뷰 리스트" />
+        </Card>
+        <Card className="p-6">
+          <ReviewList reviews={filteredNegativeReviews} title="최근 30일간의 부정 리뷰 리스트" />
+        </Card>
       </div>
     </div>
   );
