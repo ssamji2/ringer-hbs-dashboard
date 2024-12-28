@@ -20,7 +20,7 @@ import { useState } from "react";
 const salesData = [
   {
     id: 1,
-    storeName: "강남점",
+    storeName: "국수나무 강남점",
     totalSales: 25800000,
     deliverySales: 15800000,
     offlineSales: 8500000,
@@ -32,7 +32,7 @@ const salesData = [
   },
   {
     id: 2,
-    storeName: "홍대점",
+    storeName: "도쿄스테이크 홍대점",
     totalSales: 22500000,
     deliverySales: 14200000,
     offlineSales: 7300000,
@@ -44,7 +44,7 @@ const salesData = [
   },
   {
     id: 3,
-    storeName: "신촌점",
+    storeName: "화평동왕냉면 신촌점",
     totalSales: 19800000,
     deliverySales: 12500000,
     offlineSales: 6300000,
@@ -56,7 +56,7 @@ const salesData = [
   },
   {
     id: 4,
-    storeName: "건대점",
+    storeName: "국수나무 건대점",
     totalSales: 21200000,
     deliverySales: 13800000,
     offlineSales: 6400000,
@@ -68,7 +68,7 @@ const salesData = [
   },
   {
     id: 5,
-    storeName: "명동점",
+    storeName: "도쿄스테이크 명동점",
     totalSales: 24500000,
     deliverySales: 14500000,
     offlineSales: 8500000,
@@ -80,7 +80,7 @@ const salesData = [
   },
   {
     id: 6,
-    storeName: "종로점",
+    storeName: "화평동왕냉면 종로점",
     totalSales: 20800000,
     deliverySales: 12800000,
     offlineSales: 7000000,
@@ -92,7 +92,7 @@ const salesData = [
   },
   {
     id: 7,
-    storeName: "잠실점",
+    storeName: "국수나무 잠실점",
     totalSales: 23500000,
     deliverySales: 14200000,
     offlineSales: 8000000,
@@ -104,7 +104,7 @@ const salesData = [
   },
   {
     id: 8,
-    storeName: "강변점",
+    storeName: "도쿄스테이크 강변점",
     totalSales: 18900000,
     deliverySales: 11500000,
     offlineSales: 6400000,
@@ -116,7 +116,7 @@ const salesData = [
   },
   {
     id: 9,
-    storeName: "신림점",
+    storeName: "화평동왕냉면 신림점",
     totalSales: 19200000,
     deliverySales: 12000000,
     offlineSales: 6200000,
@@ -128,7 +128,7 @@ const salesData = [
   },
   {
     id: 10,
-    storeName: "사당점",
+    storeName: "국수나무 사당점",
     totalSales: 20500000,
     deliverySales: 12500000,
     offlineSales: 7000000,
