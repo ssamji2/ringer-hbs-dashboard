@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useState, useEffect } from "react";
 
 type PriceData = {
@@ -7,21 +7,31 @@ type PriceData = {
   [key: string]: string | number;
 };
 
+const INGREDIENT_COLORS = {
+  "양파": "#8B5CF6",  // 보라색
+  "대파": "#10B981",  // 녹색
+  "무": "#F97316",    // 주황색
+  "배추": "#0EA5E9",  // 파란색
+  "감자": "#D946EF",  // 분홍색
+  "당근": "#F43F5E",  // 빨간색
+  "마늘": "#14B8A6",  // 청록색
+  "생강": "#EAB308",  // 노란색
+  "고구마": "#EC4899", // 분홍색
+  "양배추": "#6366F1", // 인디고
+};
+
 const CHART_COLORS = {
   쿠팡: {
     gradient: ["#0EA5E9", "#8B5CF6"],
     background: "from-blue-50 to-violet-50",
-    stroke: "#8B5CF6"
   },
   마켓대리: {
     gradient: ["#F97316", "#D946EF"],
     background: "from-orange-50 to-pink-50",
-    stroke: "#D946EF"
   },
   쿠거: {
     gradient: ["#10B981", "#6366F1"],
     background: "from-emerald-50 to-indigo-50",
-    stroke: "#6366F1"
   }
 };
 
@@ -71,18 +81,12 @@ const PriceChart = ({
 
   return (
     <div className="space-y-4">
-      <div className="h-[400px]">
+      <div className="h-[450px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart 
             data={priceHistory}
-            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            margin={{ top: 60, right: 30, left: 20, bottom: 20 }}
           >
-            <defs>
-              <linearGradient id={`gradient-${channel}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={colors.gradient[0]} stopOpacity={0.2}/>
-                <stop offset="95%" stopColor={colors.gradient[1]} stopOpacity={0}/>
-              </linearGradient>
-            </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" opacity={0.4} />
             <XAxis 
               dataKey="time" 
@@ -109,26 +113,31 @@ const PriceChart = ({
               }}
               labelStyle={{ color: '#6B7280' }}
             />
-            {channelData.map((ingredient, index) => (
+            {channelData.map((ingredient) => (
               <Line
                 key={ingredient.name}
                 type="monotone"
                 dataKey={ingredient.name}
-                stroke={colors.stroke}
+                stroke={INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS] || '#374151'}
                 strokeWidth={2}
-                dot={{ fill: colors.gradient[0], strokeWidth: 2, r: 4 }}
-                activeDot={{ r: 6, fill: colors.gradient[0] }}
+                dot={{ 
+                  fill: INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS] || '#374151',
+                  strokeWidth: 2,
+                  r: 4 
+                }}
+                activeDot={{ 
+                  r: 6,
+                  fill: INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS] || '#374151'
+                }}
                 name={ingredient.name}
-                strokeOpacity={(5 - index) / 5}
-                fill={`url(#gradient-${channel})`}
               />
             ))}
           </LineChart>
         </ResponsiveContainer>
       </div>
       
-      <div className="flex flex-wrap gap-4 justify-center items-center px-4">
-        {channelData.map((ingredient, index) => (
+      <div className="flex flex-wrap gap-4 justify-center items-center px-4 mt-4">
+        {channelData.map((ingredient) => (
           <div 
             key={ingredient.name}
             className="flex items-center gap-2"
@@ -136,8 +145,7 @@ const PriceChart = ({
             <div 
               className="w-3 h-3 rounded-full"
               style={{ 
-                backgroundColor: colors.stroke,
-                opacity: (5 - index) / 5
+                backgroundColor: INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS] || '#374151'
               }}
             />
             <span className="text-sm text-gray-600">
