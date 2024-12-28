@@ -21,6 +21,16 @@ const mockData = {
       weekday: 9200000,
       weekend: 4100000,
     }
+  },
+  monthlySales: {
+    lastMonth: {
+      weekday: 35000000,
+      weekend: 15000000,
+    },
+    thisMonth: {
+      weekday: 38000000,
+      weekend: 17000000,
+    }
   }
 };
 
@@ -43,6 +53,25 @@ const weeklyComparisonData = [
   {
     period: "금주 주말",
     sales: formatGraphValue(mockData.weeklySales.thisWeek.weekend),
+  },
+];
+
+const monthlyComparisonData = [
+  {
+    period: "전월 평일",
+    sales: formatGraphValue(mockData.monthlySales.lastMonth.weekday),
+  },
+  {
+    period: "전월 주말",
+    sales: formatGraphValue(mockData.monthlySales.lastMonth.weekend),
+  },
+  {
+    period: "금월 평일",
+    sales: formatGraphValue(mockData.monthlySales.thisMonth.weekday),
+  },
+  {
+    period: "금월 주말",
+    sales: formatGraphValue(mockData.monthlySales.thisMonth.weekend),
   },
 ];
 
@@ -109,6 +138,49 @@ export const SalesOverview = () => {
           </div>
         </Card>
       </div>
+
+      <Card className="p-4 col-span-2 bg-gradient-to-br from-pink-50 to-white">
+        <h3 className="text-sm font-medium text-gray-500">월간 매출</h3>
+        <div className="grid grid-cols-2 gap-4 mt-2">
+          <div>
+            <h4 className="text-xs text-gray-400">전월</h4>
+            <div className="mt-1">
+              <p className="text-sm">평일: <span className="font-bold">{formatCurrency(mockData.monthlySales.lastMonth.weekday)}</span></p>
+              <p className="text-sm">주말: <span className="font-bold">{formatCurrency(mockData.monthlySales.lastMonth.weekend)}</span></p>
+            </div>
+          </div>
+          <div>
+            <h4 className="text-xs text-gray-400">금월</h4>
+            <div className="mt-1">
+              <p className="text-sm">평일: <span className="font-bold">{formatCurrency(mockData.monthlySales.thisMonth.weekday)}</span></p>
+              <p className="text-sm">주말: <span className="font-bold">{formatCurrency(mockData.monthlySales.thisMonth.weekend)}</span></p>
+            </div>
+          </div>
+        </div>
+        <div className="h-[120px] mt-4">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={monthlyComparisonData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+              <XAxis dataKey="period" stroke="#6B7280" />
+              <YAxis 
+                stroke="#6B7280"
+                tickFormatter={(value) => `${value}`}
+                label={{ value: '만원', angle: -90, position: 'insideLeft', offset: 0 }}
+              />
+              <Tooltip 
+                formatter={(value) => [`${value}만원`, "매출"]}
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  borderRadius: '8px',
+                  border: '1px solid #E5E7EB',
+                }}
+              />
+              <Bar dataKey="sales" fill={CHART_COLORS.secondary}>
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </Card>
 
       <Card className="p-6 bg-gradient-to-br from-indigo-50 to-white">
         <h3 className="text-lg font-semibold mb-4">매출 추이</h3>
