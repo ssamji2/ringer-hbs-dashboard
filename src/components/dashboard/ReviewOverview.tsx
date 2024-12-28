@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   LineChart,
   Line,
@@ -12,6 +11,7 @@ import {
   BarChart,
   Bar
 } from "recharts";
+import { StoreReviewTable } from "./StoreReviewTable";
 
 const positiveReviewData = [
   { date: "09.16 월 ~", count: 36 },
@@ -32,20 +32,17 @@ const negativeReviewData = [
 ];
 
 const ratingDistribution = [
-  { rating: "5.0", count: 31, brand: "퓨레도넛" },
-  { rating: "4.9", count: 8, brand: "퓨레도넛" },
-  { rating: "4.8", count: 10, brand: "퓨레도넛" },
-  { rating: "4.7", count: 3, brand: "퓨레도넛" },
-  { rating: "4.6", count: 3, brand: "퓨레도넛" },
-  { rating: "5.0", count: 10, brand: "퓨레피자" },
-  { rating: "4.7", count: 1, brand: "퓨레피자" },
-  { rating: "4.2", count: 1, brand: "퓨레피자" },
-];
-
-const storeReviews = [
-  { brand: "퓨레도넛", store: "퓨레도넛 역삼점", avgRating: 5.0, reviewCount: 2, positiveRate: "100%", negativeRate: "0%" },
-  { brand: "퓨레도넛", store: "퓨레도넛 강남역점", avgRating: 5.0, reviewCount: 6, positiveRate: "100%", negativeRate: "0%" },
-  { brand: "퓨레도넛", store: "퓨레도넛 광나루점", avgRating: 5.0, reviewCount: 4, positiveRate: "100%", negativeRate: "0%" },
+  { rating: "5.0", count: 31, brand: "국수나무" },
+  { rating: "4.9", count: 28, brand: "국수나무" },
+  { rating: "4.8", count: 25, brand: "국수나무" },
+  { rating: "4.7", count: 23, brand: "국수나무" },
+  { rating: "4.6", count: 20, brand: "국수나무" },
+  { rating: "5.0", count: 35, brand: "도쿄스테이크" },
+  { rating: "4.9", count: 30, brand: "도쿄스테이크" },
+  { rating: "4.8", count: 28, brand: "도쿄스테이크" },
+  { rating: "5.0", count: 33, brand: "화평동왕냉면" },
+  { rating: "4.9", count: 29, brand: "화평동왕냉면" },
+  { rating: "4.8", count: 26, brand: "화평동왕냉면" },
 ];
 
 export const ReviewOverview = () => {
@@ -163,46 +160,7 @@ export const ReviewOverview = () => {
         </TabsContent>
 
         <TabsContent value="byStore" className="mt-6">
-          <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">매장별 리뷰 분포</h3>
-              <Select defaultValue="all">
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="퓨레도넛" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">퓨레도넛</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="bg-white rounded-lg shadow">
-              <table className="min-w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">브랜드</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">매장</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">평균 평점</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">전체 리뷰수</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">긍정 리뷰비율</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">부정 리뷰비율</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {storeReviews.map((review, index) => (
-                    <tr key={index} className="border-b">
-                      <td className="px-6 py-4 text-sm">{review.brand}</td>
-                      <td className="px-6 py-4 text-sm">{review.store}</td>
-                      <td className="px-6 py-4 text-sm">{review.avgRating}</td>
-                      <td className="px-6 py-4 text-sm">{review.reviewCount}</td>
-                      <td className="px-6 py-4 text-sm text-success">{review.positiveRate}</td>
-                      <td className="px-6 py-4 text-sm text-warning">{review.negativeRate}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <StoreReviewTable />
         </TabsContent>
 
         <TabsContent value="byMenu" className="mt-6">
