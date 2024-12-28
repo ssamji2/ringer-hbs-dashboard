@@ -1,7 +1,9 @@
 import { Card } from "@/components/ui/card";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
+import { OrderChannelSales } from "./OrderChannelSales";
+import { SalesTable } from "./SalesTable";
 
 const mockData = {
   dailySales: {
@@ -264,6 +266,9 @@ export const SalesOverview = () => {
           </ResponsiveContainer>
         </div>
       </Card>
+
+      <OrderChannelSales />
+      <SalesTable />
     </div>
   );
 };
