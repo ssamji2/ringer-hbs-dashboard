@@ -455,10 +455,9 @@ export const InventoryOverview = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
 
-  // Get top 5 ingredients by price for each channel
+  // Get top 5 ingredients by price for each channel separately
   const topIngredientsByChannel = mockInventoryData
-    .sort((a, b) => b.currentPrice - a.currentPrice)
-    .slice(0, 5);
+    .sort((a, b) => b.currentPrice - a.currentPrice);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
