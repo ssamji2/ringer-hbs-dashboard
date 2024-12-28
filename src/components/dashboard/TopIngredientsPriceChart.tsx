@@ -113,46 +113,50 @@ const PriceChart = ({
               }}
               labelStyle={{ color: '#6B7280' }}
             />
-            {channelData.map((ingredient) => (
-              <Line
-                key={ingredient.name}
-                type="monotone"
-                dataKey={ingredient.name}
-                stroke={INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS] || '#374151'}
-                strokeWidth={2}
-                dot={{ 
-                  fill: INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS] || '#374151',
-                  strokeWidth: 2,
-                  r: 4 
-                }}
-                activeDot={{ 
-                  r: 6,
-                  fill: INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS] || '#374151'
-                }}
-                name={ingredient.name}
-              />
-            ))}
+            {channelData.map((ingredient) => {
+              const color = INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS];
+              return (
+                <Line
+                  key={ingredient.name}
+                  type="monotone"
+                  dataKey={ingredient.name}
+                  stroke={color}
+                  strokeWidth={2}
+                  dot={{ 
+                    fill: color,
+                    strokeWidth: 2,
+                    r: 4 
+                  }}
+                  activeDot={{ 
+                    r: 6,
+                    fill: color
+                  }}
+                  name={ingredient.name}
+                />
+              );
+            })}
           </LineChart>
         </ResponsiveContainer>
       </div>
       
       <div className="flex flex-wrap gap-4 justify-center items-center px-4 mt-4">
-        {channelData.map((ingredient) => (
-          <div 
-            key={ingredient.name}
-            className="flex items-center gap-2"
-          >
+        {channelData.map((ingredient) => {
+          const color = INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS];
+          return (
             <div 
-              className="w-3 h-3 rounded-full"
-              style={{ 
-                backgroundColor: INGREDIENT_COLORS[ingredient.name as keyof typeof INGREDIENT_COLORS] || '#374151'
-              }}
-            />
-            <span className="text-sm text-gray-600">
-              {ingredient.name}
-            </span>
-          </div>
-        ))}
+              key={ingredient.name}
+              className="flex items-center gap-2"
+            >
+              <div 
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: color }}
+              />
+              <span className="text-sm text-gray-600">
+                {ingredient.name}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
