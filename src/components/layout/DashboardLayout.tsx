@@ -3,11 +3,84 @@ import {
   Sidebar, 
   SidebarContent, 
   SidebarHeader,
-  SidebarProvider 
+  SidebarProvider,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton 
 } from "@/components/ui/sidebar";
-import { Syringe, User } from "lucide-react";
+import { 
+  LayoutDashboard, 
+  LineChart, 
+  MessageSquare, 
+  Package,
+  Users,
+  Settings,
+  FileText,
+  Calendar,
+  BookOpen,
+  HelpCircle,
+  Syringe,
+  User
+} from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 export const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation();
+  
+  const menuItems = [
+    { 
+      icon: LayoutDashboard, 
+      label: "대시보드", 
+      href: "/",
+      isActive: location.pathname === "/"
+    },
+    { 
+      icon: LineChart, 
+      label: "통합 매출 조회", 
+      href: "/sales" 
+    },
+    { 
+      icon: MessageSquare, 
+      label: "리뷰 통합 조회", 
+      href: "/reviews" 
+    },
+    { 
+      icon: Package, 
+      label: "식자재 현황", 
+      href: "/inventory" 
+    },
+    { 
+      icon: Users, 
+      label: "직원 관리", 
+      href: "/employees" 
+    },
+    { 
+      icon: Calendar, 
+      label: "일정 관리", 
+      href: "/schedule" 
+    },
+    { 
+      icon: FileText, 
+      label: "문서 관리", 
+      href: "/documents" 
+    },
+    { 
+      icon: BookOpen, 
+      label: "매뉴얼", 
+      href: "/manual" 
+    },
+    { 
+      icon: Settings, 
+      label: "설정", 
+      href: "/settings" 
+    },
+    { 
+      icon: HelpCircle, 
+      label: "고객 지원", 
+      href: "/support" 
+    }
+  ];
+
   return (
     <SidebarProvider>
       <div className="min-h-screen bg-secondary-light flex w-full">
@@ -17,7 +90,22 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
             <span className="font-semibold text-primary">링거v.0</span>
           </SidebarHeader>
           <SidebarContent>
-            {/* Navigation items will be added here */}
+            <SidebarMenu>
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.label}>
+                  <SidebarMenuButton
+                    asChild
+                    tooltip={item.label}
+                    isActive={item.isActive}
+                  >
+                    <a href={item.href} className="flex items-center gap-2">
+                      <item.icon className="w-4 h-4" />
+                      <span>{item.label}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
           </SidebarContent>
           <div className="mt-auto p-4 border-t border-gray-200">
             <div className="flex items-center gap-2 text-sm text-gray-600">
