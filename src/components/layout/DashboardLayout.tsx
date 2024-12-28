@@ -19,7 +19,7 @@ import {
   User,
   Building2
 } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
 export const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -34,32 +34,38 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
     { 
       icon: Building2, 
       label: "매장 링거 솔루션", 
-      href: "/store-solution" 
+      href: "/store-solution",
+      isActive: location.pathname === "/store-solution"
     },
     { 
       icon: Store, 
       label: "매장 리스트", 
-      href: "/store-list" 
+      href: "/store-list",
+      isActive: location.pathname === "/store-list"
     },
     { 
       icon: FileText, 
       label: "실시간 영업현황", 
-      href: "/sales-status" 
+      href: "/sales-status",
+      isActive: location.pathname === "/sales-status"
     },
     { 
       icon: BookOpen, 
       label: "매뉴얼", 
-      href: "/manual" 
+      href: "/manual",
+      isActive: location.pathname === "/manual"
     },
     { 
       icon: Settings, 
       label: "설정", 
-      href: "/settings" 
+      href: "/settings",
+      isActive: location.pathname === "/settings"
     },
     { 
       icon: HelpCircle, 
       label: "고객 지원", 
-      href: "/support" 
+      href: "/support",
+      isActive: location.pathname === "/support"
     }
   ];
 
@@ -81,8 +87,8 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
                     isActive={item.isActive}
                     className="group transition-all duration-300 hover:bg-primary/10"
                   >
-                    <a 
-                      href={item.href} 
+                    <Link 
+                      to={item.href} 
                       className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300
                         ${item.isActive ? 
                           'bg-primary text-white shadow-lg scale-[0.98] font-medium' : 
@@ -93,7 +99,7 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
                         ${item.isActive ? 'text-white' : 'text-gray-500 group-hover:text-primary'}`} 
                       />
                       <span className="text-sm">{item.label}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
