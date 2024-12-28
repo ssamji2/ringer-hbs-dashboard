@@ -2,11 +2,25 @@ import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Review } from "@/data/reviewListData";
+import { Navigation2, ShoppingBag, Package } from "lucide-react";
 
 interface ReviewListProps {
   reviews: Review[];
   title: string;
 }
+
+const ChannelIcon = ({ channel }: { channel: Review["channel"] }) => {
+  switch (channel) {
+    case "N플레이스":
+      return <Navigation2 className="inline-block w-4 h-4 mr-1" />;
+    case "배민":
+      return <ShoppingBag className="inline-block w-4 h-4 mr-1" />;
+    case "쿠팡이츠":
+      return <Package className="inline-block w-4 h-4 mr-1" />;
+    default:
+      return null;
+  }
+};
 
 export const ReviewList = ({ reviews, title }: ReviewListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,7 +54,12 @@ export const ReviewList = ({ reviews, title }: ReviewListProps) => {
               <TableRow key={review.id}>
                 <TableCell>{review.brand}</TableCell>
                 <TableCell>{review.store}</TableCell>
-                <TableCell>{review.channel}</TableCell>
+                <TableCell>
+                  <span className="flex items-center">
+                    <ChannelIcon channel={review.channel} />
+                    {review.channel}
+                  </span>
+                </TableCell>
                 <TableCell>{review.date}</TableCell>
                 <TableCell>{review.rating}</TableCell>
                 <TableCell>{review.review}</TableCell>
