@@ -1,17 +1,41 @@
 import { Card } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
 
 const mockData = {
-  dailySales: [
-    { date: "2024-01-01", sales: 1200000 },
-    { date: "2024-01-02", sales: 1500000 },
-    { date: "2024-01-03", sales: 1300000 },
-    { date: "2024-01-04", sales: 1700000 },
-    { date: "2024-01-05", sales: 1400000 },
-    { date: "2024-01-06", sales: 1600000 },
-    { date: "2024-01-07", sales: 1800000 },
-    { date: "2024-01-08", sales: 1900000 },
-  ],
+  dailySales: {
+    "국수나무": [
+      { date: "2024-01-01", sales: 8500000 },
+      { date: "2024-01-02", sales: 9200000 },
+      { date: "2024-01-03", sales: 3200000 },
+      { date: "2024-01-04", sales: 9800000 },
+      { date: "2024-01-05", sales: 8400000 },
+      { date: "2024-01-06", sales: 7600000 },
+      { date: "2024-01-07", sales: 8800000 },
+      { date: "2024-01-08", sales: 9100000 },
+    ],
+    "도쿄스테이크": [
+      { date: "2024-01-01", sales: 7800000 },
+      { date: "2024-01-02", sales: 8500000 },
+      { date: "2024-01-03", sales: 2800000 },
+      { date: "2024-01-04", sales: 9500000 },
+      { date: "2024-01-05", sales: 7900000 },
+      { date: "2024-01-06", sales: 8200000 },
+      { date: "2024-01-07", sales: 8900000 },
+      { date: "2024-01-08", sales: 8700000 },
+    ],
+    "화평동왕냉면": [
+      { date: "2024-01-01", sales: 7200000 },
+      { date: "2024-01-02", sales: 7800000 },
+      { date: "2024-01-03", sales: 2500000 },
+      { date: "2024-01-04", sales: 9200000 },
+      { date: "2024-01-05", sales: 7500000 },
+      { date: "2024-01-06", sales: 7800000 },
+      { date: "2024-01-07", sales: 8300000 },
+      { date: "2024-01-08", sales: 8100000 },
+    ]
+  },
   weeklySales: {
     lastWeek: {
       weekday: 8500000,
@@ -82,6 +106,8 @@ const CHART_COLORS = {
 };
 
 export const SalesOverview = () => {
+  const [selectedStore, setSelectedStore] = useState<string>("국수나무");
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -183,11 +209,23 @@ export const SalesOverview = () => {
       </Card>
 
       <Card className="p-6 bg-gradient-to-br from-indigo-50 to-white">
-        <h3 className="text-lg font-semibold mb-4">매출 추이</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold">매출 추이</h3>
+          <Select value={selectedStore} onValueChange={setSelectedStore}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="매장 선택" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="국수나무">국수나무</SelectItem>
+              <SelectItem value="도쿄스테이크">도쿄스테이크</SelectItem>
+              <SelectItem value="화평동왕냉면">화평동왕냉면</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart 
-              data={mockData.dailySales.map(item => ({
+              data={mockData.dailySales[selectedStore].map(item => ({
                 ...item,
                 sales: formatGraphValue(item.sales)
               }))}
@@ -202,6 +240,7 @@ export const SalesOverview = () => {
               <XAxis dataKey="date" stroke="#6B7280" />
               <YAxis 
                 stroke="#6B7280"
+                domain={[0, 1000]}
                 tickFormatter={(value) => `${value}`}
                 label={{ value: '만원', angle: -90, position: 'insideLeft', offset: 0 }}
               />
