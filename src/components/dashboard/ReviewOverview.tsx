@@ -14,8 +14,10 @@ import {
   Bar
 } from "recharts";
 import { StoreReviewTable } from "./StoreReviewTable";
-import { MenuReviewTable } from "./MenuReviewTable"; // Importing MenuReviewTable
+import { MenuReviewTable } from "./MenuReviewTable";
+import { ReviewList } from "./ReviewList";
 import { brands } from "@/data/reviewData";
+import { positiveReviews, negativeReviews } from "@/data/reviewListData";
 
 const getFilteredData = (data: any[], brand: string) => {
   if (brand === "전체") return data;
@@ -223,6 +225,15 @@ export const ReviewOverview = () => {
                 </div>
               </Card>
             </div>
+
+            <div className="space-y-6">
+              <Card className="p-6">
+                <ReviewList reviews={positiveReviews} title="최근 30일간의 긍정 리뷰 리스트" />
+              </Card>
+              <Card className="p-6">
+                <ReviewList reviews={negativeReviews} title="최근 30일간의 부정 리뷰 리스트" />
+              </Card>
+            </div>
           </div>
         </TabsContent>
 
@@ -231,7 +242,7 @@ export const ReviewOverview = () => {
         </TabsContent>
 
         <TabsContent value="byMenu" className="mt-6">
-          <MenuReviewTable /> {/* Using MenuReviewTable */}
+          <MenuReviewTable />
         </TabsContent>
       </Tabs>
     </div>
