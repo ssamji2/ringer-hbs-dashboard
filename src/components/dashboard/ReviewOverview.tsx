@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   LineChart,
   Line,
@@ -12,23 +14,53 @@ import {
   Bar
 } from "recharts";
 import { StoreReviewTable } from "./StoreReviewTable";
+import { brands } from "@/data/reviewData";
+
+const getFilteredData = (data: any[], brand: string) => {
+  if (brand === "전체") return data;
+  return data.filter(item => item.brand === brand);
+};
 
 const positiveReviewData = [
-  { date: "09.16 월 ~", count: 36 },
-  { date: "09.23 월 ~", count: 172 },
-  { date: "09.30 월 ~", count: 239 },
-  { date: "10.07 월 ~", count: 174 },
-  { date: "10.14 월 ~", count: 167 },
-  { date: "10.21 월 ~", count: 36 },
+  { date: "09.16 월 ~", count: 36, brand: "국수나무" },
+  { date: "09.23 월 ~", count: 172, brand: "국수나무" },
+  { date: "09.30 월 ~", count: 239, brand: "국수나무" },
+  { date: "10.07 월 ~", count: 174, brand: "국수나무" },
+  { date: "10.14 월 ~", count: 167, brand: "국수나무" },
+  { date: "10.21 월 ~", count: 36, brand: "국수나무" },
+  { date: "09.16 월 ~", count: 42, brand: "도쿄스테이크" },
+  { date: "09.23 월 ~", count: 158, brand: "도쿄스테이크" },
+  { date: "09.30 월 ~", count: 220, brand: "도쿄스테이크" },
+  { date: "10.07 월 ~", count: 185, brand: "도쿄스테이크" },
+  { date: "10.14 월 ~", count: 178, brand: "도쿄스테이크" },
+  { date: "10.21 월 ~", count: 45, brand: "도쿄스테이크" },
+  { date: "09.16 월 ~", count: 38, brand: "화평동왕냉면" },
+  { date: "09.23 월 ~", count: 165, brand: "화평동왕냉면" },
+  { date: "09.30 월 ~", count: 228, brand: "화평동왕냉면" },
+  { date: "10.07 월 ~", count: 180, brand: "화평동왕냉면" },
+  { date: "10.14 월 ~", count: 170, brand: "화평동왕냉면" },
+  { date: "10.21 월 ~", count: 40, brand: "화평동왕냉면" },
 ];
 
 const negativeReviewData = [
-  { date: "09.16 월 ~", count: 2 },
-  { date: "09.23 월 ~", count: 10 },
-  { date: "09.30 월 ~", count: 9 },
-  { date: "10.07 월 ~", count: 3 },
-  { date: "10.14 월 ~", count: 5 },
-  { date: "10.21 월 ~", count: 0 },
+  { date: "09.16 월 ~", count: 2, brand: "국수나무" },
+  { date: "09.23 월 ~", count: 10, brand: "국수나무" },
+  { date: "09.30 월 ~", count: 9, brand: "국수나무" },
+  { date: "10.07 월 ~", count: 3, brand: "국수나무" },
+  { date: "10.14 월 ~", count: 5, brand: "국수나무" },
+  { date: "10.21 월 ~", count: 0, brand: "국수나무" },
+  { date: "09.16 월 ~", count: 3, brand: "도쿄스테이크" },
+  { date: "09.23 월 ~", count: 8, brand: "도쿄스테이크" },
+  { date: "09.30 월 ~", count: 7, brand: "도쿄스테이크" },
+  { date: "10.07 월 ~", count: 4, brand: "도쿄스테이크" },
+  { date: "10.14 월 ~", count: 6, brand: "도쿄스테이크" },
+  { date: "10.21 월 ~", count: 1, brand: "도쿄스테이크" },
+  { date: "09.16 월 ~", count: 2, brand: "화평동왕냉면" },
+  { date: "09.23 월 ~", count: 9, brand: "화평동왕냉면" },
+  { date: "09.30 월 ~", count: 8, brand: "화평동왕냉면" },
+  { date: "10.07 월 ~", count: 3, brand: "화평동왕냉면" },
+  { date: "10.14 월 ~", count: 4, brand: "화평동왕냉면" },
+  { date: "10.21 월 ~", count: 1, brand: "화평동왕냉면" },
 ];
 
 const ratingDistribution = [
@@ -45,7 +77,27 @@ const ratingDistribution = [
   { rating: "4.8", count: 26, brand: "화평동왕냉면" },
 ];
 
+const getBrandStats = (brand: string) => {
+  const filteredRatings = getFilteredData(ratingDistribution, brand);
+  const avgRating = (filteredRatings.reduce((acc, curr) => acc + (parseFloat(curr.rating) * curr.count), 0) / 
+    filteredRatings.reduce((acc, curr) => acc + curr.count, 0)).toFixed(1);
+  
+  const filteredPositive = getFilteredData(positiveReviewData, brand);
+  const filteredNegative = getFilteredData(negativeReviewData, brand);
+  
+  const totalReviews = filteredPositive.reduce((acc, curr) => acc + curr.count, 0) +
+    filteredNegative.reduce((acc, curr) => acc + curr.count, 0);
+
+  return {
+    avgRating,
+    totalReviews
+  };
+};
+
 export const ReviewOverview = () => {
+  const [selectedBrand, setSelectedBrand] = useState("전체");
+  const stats = getBrandStats(selectedBrand);
+
   return (
     <div className="space-y-6">
       <Tabs defaultValue="all" className="w-full">
@@ -74,20 +126,34 @@ export const ReviewOverview = () => {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-lg font-semibold">최근 30일간의 평점 및 리뷰현황</h2>
-              <p className="text-sm text-gray-500">(24.09.22 ~ 24.10.21)</p>
+              <div className="flex items-center gap-4">
+                <Select value={selectedBrand} onValueChange={setSelectedBrand}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="브랜드 선택" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {brands.map((brand) => (
+                      <SelectItem key={brand} value={brand}>
+                        {brand}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-gray-500">(24.09.22 ~ 24.10.21)</p>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <Card className="p-6">
                 <div className="space-y-2">
-                  <h3 className="text-4xl font-bold">4.8</h3>
+                  <h3 className="text-4xl font-bold">{stats.avgRating}</h3>
                   <p className="text-sm text-gray-500">평균 평점</p>
                   <p className="text-xs text-gray-400">- 지난 30일 대비</p>
                 </div>
               </Card>
               <Card className="p-6">
                 <div className="space-y-2">
-                  <h3 className="text-4xl font-bold">849</h3>
+                  <h3 className="text-4xl font-bold">{stats.totalReviews}</h3>
                   <p className="text-sm text-gray-500">리뷰 수</p>
                   <p className="text-xs text-success">+0.1% 지난 30일 대비</p>
                 </div>
@@ -99,7 +165,7 @@ export const ReviewOverview = () => {
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
-                    data={ratingDistribution}
+                    data={getFilteredData(ratingDistribution, selectedBrand)}
                     layout="vertical"
                     margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
                   >
@@ -118,7 +184,7 @@ export const ReviewOverview = () => {
                 <h3 className="text-lg font-semibold mb-4">긍정 리뷰 수 추이</h3>
                 <div className="h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={positiveReviewData}>
+                    <LineChart data={getFilteredData(positiveReviewData, selectedBrand)}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="date" />
                       <YAxis />
@@ -139,7 +205,7 @@ export const ReviewOverview = () => {
                 <h3 className="text-lg font-semibold mb-4">부정 리뷰 수 추이</h3>
                 <div className="h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={negativeReviewData}>
+                    <LineChart data={getFilteredData(negativeReviewData, selectedBrand)}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="date" />
                       <YAxis />
