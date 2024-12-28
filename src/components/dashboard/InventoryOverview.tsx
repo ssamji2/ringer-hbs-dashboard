@@ -517,9 +517,45 @@ export const InventoryOverview = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const filteredData = selectedCategory === "전체" 
-    ? mockInventoryData 
-    : mockInventoryData.filter(item => item.category === selectedCategory);
+  // Group data by item name and category
+  const groupedData = mockInventoryData.reduce((acc, item) => {
+    const key = `${item.name}-${item.category}`;
+    if (!acc[key]) {
+      acc[key] = {
+        name: item.name,
+        category: item.category,
+        channels: {}
+      };
+    }
+    acc[key].channels[item.channel] = {
+      currentPrice: item.currentPrice,
+      yesterdayPrice: item.yesterdayPrice,
+      weekAgoPrice: item.weekAgoPrice,
+      twoWeeksAgoPrice: item.twoWeeksAgoPrice,
+      monthAgoPrice: item.monthAgoPrice,
+      yearAgoPrice: item.yearAgoPrice,
+      trend: item.trend,
+      isLowestPrice: item.isLowestPrice,
+    };
+    return acc;
+  }, {} as Record<string, {
+    name: string;
+    category: string;
+    channels: Record<string, {
+      currentPrice: number;
+      yesterdayPrice: number;
+      weekAgoPrice: number;
+      twoWeeksAgoPrice: number;
+      monthAgoPrice: number;
+      yearAgoPrice: number;
+      trend: string;
+      isLowestPrice: boolean;
+    }>;
+  }>);
+
+  const filteredData = Object.values(groupedData).filter(item => 
+    selectedCategory === "전체" || item.category === selectedCategory
+  );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -558,36 +594,52 @@ export const InventoryOverview = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>품목</TableHead>
-                <TableHead>채널</TableHead>
-                <TableHead>현재가격</TableHead>
-                <TableHead>어제가격</TableHead>
-                <TableHead>7일전</TableHead>
-                <TableHead>2주전</TableHead>
-                <TableHead>한달전</TableHead>
-                <TableHead>1년전</TableHead>
-                <TableHead>추세</TableHead>
+                <TableHead className="text-center">
+                  쿠팡
+                  <div className="text-xs text-muted-foreground">현재가격 / 어제 / 7일전 / 2주전 / 한달전 / 1년전</div>
+                </TableHead>
+                <TableHead className="text-center">
+                  마켓대리
+                  <div className="text-xs text-muted-foreground">현재가격 / 어제 / 7일전 / 2주전 / 한달전 / 1년전</div>
+                </TableHead>
+                <TableHead className="text-center">
+                  쿠거
+                  <div className="text-xs text-muted-foreground">현재가격 / 어제 / 7일전 / 2주전 / 한달전 / 1년전</div>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedData.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-medium">{item.name}</TableCell>
-                  <TableCell>{item.channel}</TableCell>
-                  <TableCell className={item.isLowestPrice ? "text-success-dark font-bold" : ""}>
-                    ₩{item.currentPrice.toLocaleString()}
+              {paginatedData.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium whitespace-nowrap">
+                    {item.name}
+                    <div className="text-xs text-muted-foreground">{item.category}</div>
                   </TableCell>
-                  <TableCell>₩{item.yesterdayPrice.toLocaleString()}</TableCell>
-                  <TableCell>₩{item.weekAgoPrice.toLocaleString()}</TableCell>
-                  <TableCell>₩{item.twoWeeksAgoPrice.toLocaleString()}</TableCell>
-                  <TableCell>₩{item.monthAgoPrice.toLocaleString()}</TableCell>
-                  <TableCell>₩{item.yearAgoPrice.toLocaleString()}</TableCell>
-                  <TableCell>
-                    {item.trend === "up" ? (
-                      <TrendingUp className="text-warning-dark w-5 h-5" />
-                    ) : (
-                      <TrendingDown className="text-success-dark w-5 h-5" />
-                    )}
-                  </TableCell>
+                  {['쿠팡', '마켓대리', '쿠거'].map((channel) => (
+                    <TableCell key={channel} className="text-center">
+                      {item.channels[channel] ? (
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-center gap-2 font-bold">
+                            ₩{item.channels[channel].currentPrice.toLocaleString()}
+                            {item.channels[channel].trend === "up" ? (
+                              <TrendingUp className="text-warning-dark w-4 h-4" />
+                            ) : (
+                              <TrendingDown className="text-success-dark w-4 h-4" />
+                            )}
+                          </div>
+                          <div className="text-xs text-muted-foreground space-x-2">
+                            <span>₩{item.channels[channel].yesterdayPrice.toLocaleString()}</span>
+                            <span>₩{item.channels[channel].weekAgoPrice.toLocaleString()}</span>
+                            <span>₩{item.channels[channel].twoWeeksAgoPrice.toLocaleString()}</span>
+                            <span>₩{item.channels[channel].monthAgoPrice.toLocaleString()}</span>
+                            <span>₩{item.channels[channel].yearAgoPrice.toLocaleString()}</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))}
             </TableBody>
