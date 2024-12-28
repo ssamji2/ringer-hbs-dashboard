@@ -11,7 +11,7 @@ import { TopIngredientsPriceChart } from "./TopIngredientsPriceChart";
 import { InventoryTable } from "./InventoryTable";
 import { InventoryItem } from "@/types/inventory";
 
-const mockInventoryData = [
+const mockInventoryData: InventoryItem[] = [
   {
     id: 1,
     name: "닭고기 (한마리)",
@@ -23,7 +23,7 @@ const mockInventoryData = [
     twoWeeksAgoPrice: 8400,
     monthAgoPrice: 8200,
     yearAgoPrice: 7800,
-    trend: "down",
+    trend: "down" as const,
     isLowestPrice: true,
   },
   {
