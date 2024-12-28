@@ -5,6 +5,9 @@ import { menuCategories, menuReviews, getMenusByCategory } from "@/data/menuRevi
 import { ReviewList } from "./ReviewList";
 import { positiveReviews, negativeReviews } from "@/data/reviewListData";
 
+// Define valid brand names as a type
+type BrandName = "국수나무" | "도쿄스테이크" | "화평동왕냉면";
+
 export const MenuReviewTable = () => {
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const filteredMenus = getMenusByCategory(selectedCategory);
@@ -14,18 +17,18 @@ export const MenuReviewTable = () => {
     if (selectedCategory === "전체") return reviews;
     
     // 메뉴 카테고리에 해당하는 브랜드들 찾기
-    const brandsInCategory = new Set(
+    const brandsInCategory = new Set<BrandName>(
       menuReviews
         .filter(menu => menu.category === selectedCategory)
         .map(menu => {
           if (menu.category === "국수류") return "국수나무";
           if (menu.category === "스테이크류") return "도쿄스테이크";
           if (menu.category === "냉면류") return "화평동왕냉면";
-          return "";
-        })
+          return "국수나무"; // Default case to satisfy TypeScript
+        }) as BrandName[]
     );
 
-    return reviews.filter(review => brandsInCategory.has(review.brand));
+    return reviews.filter(review => brandsInCategory.has(review.brand as BrandName));
   };
 
   const filteredPositiveReviews = getReviewsByCategory(positiveReviews);
